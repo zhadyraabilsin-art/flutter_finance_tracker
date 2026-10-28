@@ -60,6 +60,12 @@ class _HomeScreenState extends State<HomeScreen> {
     return total;
   }
 
+  double get _totalIncome {
+    return _transactions
+        .where((tx) => tx.type == TransactionType.income)
+        .fold(0.0, (sum, tx) => sum + tx.amount);
+  }
+
   double get _totalExpenses {
     return _transactions
         .where((tx) => tx.type == TransactionType.expense)
@@ -231,7 +237,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 TextStyle(color: Colors.white, fontSize: 12)),
                         const SizedBox(height: 4),
                         Text(
-                          "+${_totalBalance.toStringAsFixed(0)}tg",
+                          "+${_totalIncome.toStringAsFixed(0)}tg",
                           style: const TextStyle(
                               color: Colors.greenAccent,
                               fontWeight: FontWeight.bold),
@@ -259,8 +265,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           const Padding(
-              padding:
-                  EdgeInsetsGeometry.symmetric(horizontal: 16.0, vertical: 8.0),
+              padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
               child: Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
@@ -269,7 +274,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ))),
           Expanded(
             child: _transactions.isEmpty
-                ? const Center(child: Text("transaction yet no"))
+                ? const Center(child: Text("No transactions yet"))
                 : ListView.builder(
                     itemCount: _transactions.length,
                     itemBuilder: (ctx, index) {
@@ -294,8 +299,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: ListTile(
                             leading: CircleAvatar(
                               backgroundColor: isIncome
-                                  ? Colors.green.withOpacity(0.2)
-                                  : Colors.red.withOpacity(0.2),
+                                  ? Colors.green.withValues(alpha: 0.2)
+                                  : Colors.red.withValues(alpha: 0.2),
                               child: Icon(
                                 isIncome
                                     ? Icons.arrow_downward
